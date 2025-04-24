@@ -14,19 +14,13 @@ fl_age <- get_acs(
   separate_wider_delim(NAME, delim = "; ", names = c("tract", "county", "state")) %>%
   st_sf()
 
+source('home.R')
+
 ui <- fluidPage(
   story_maplibre(
     map_id = "map",
     sections = list(
-      "home" = story_section(
-        "Exploration des espèces",
-        content = (fluidPage(
-          tags$head(includeCSS("www/home.css")),
-          h4("Espèces du Québec"))
-          ),
-        width= '100vw', 
-        position = 'center'
-      ),
+      "home" = home_section(),
       "page2" = story_section(
         "Page 2",
         content = (fluidPage(
@@ -36,7 +30,7 @@ ui <- fluidPage(
         width= '100vw', 
         position = 'center'
       ),
-            "intro" = story_section(
+      "intro" = story_section(
         "Median Age in Florida",
         content = list(
           selectInput(
