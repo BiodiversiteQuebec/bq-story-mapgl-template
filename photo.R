@@ -6,8 +6,14 @@ photo_section <- function(sdm){
   story_section(
     "",
     content = (fluidPage(
-      tags$head(includeCSS("www/photo.css")),
+      tags$head(includeCSS("www/photo.css"),
+      tags$script(HTML("
+      Shiny.addCustomMessageHandler('scrollTo', function(anchor) {
+        document.getElementsByName(anchor)[0].scrollIntoView({ behavior: 'smooth' });
+      });
+    "))),
       fluidRow(
+        a(name='photos'),
         uiOutput("photos")
       )    )),
     width= '100vw', 
@@ -15,16 +21,18 @@ photo_section <- function(sdm){
   )
 }
 
-photo_server <- function(input){
+photo_server <- function(input, espece){
   renderUI({
-    photo_files <- getCC0links(input$espece)$url[1:12]
-    n <- length(photo_files)
-
-    photo_elements <- lapply(1:n, function(i) {
-      div(div(style=paste0('float:left;background:url("',photo_files[i],'");width:25vw;height:25vw;background-size:cover;background-position:center;')),style='width:100vw')
-    })
-    
-    fluidRow(photo_elements)
+    sp <- espece()
+    if(sp !='' & input$go){
+      photo_files <- getCC0links(sp)$url[1:12]
+      n <- length(photo_files)
+  
+      photo_elements <- lapply(1:n, function(i) {
+        div(div(style=paste0('float:left;background:url("',photo_files[i],'");width:25vw;height:25vw;background-size:cover;background-position:center;')),style='width:100vw')
+      })
+      fluidRow(photo_elements)
+    }
   })
 }
 

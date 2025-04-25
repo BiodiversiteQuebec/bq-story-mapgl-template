@@ -2,82 +2,48 @@ library(shiny)
 library(terra)
 library(mapgl)
 library(tidycensus)
-library(tidyverse)
+library(dplyr)
+library(tidyr)
 library(sf)
 library(viridisLite)
-
-fl_age <- get_acs(
-  geography = "tract",
-  variables = "B01002_001",
-  state = "FL",
-  year = 2023,
-  geometry = TRUE
-) |>
-  separate_wider_delim(NAME, delim = "; ", names = c("tract", "county", "state")) %>%
-  st_sf()
 
 source('home.R')
 source('sdm_section.R')
 source('photo.R')
 
 ui <- fluidPage(
+  tags$head(tags$script(HTML("
+      Shiny.addCustomMessageHandler('scrollTo', function(anchor) {
+        document.getElementsByName(anchor)[0].scrollIntoView({ behavior: 'smooth' });
+      });
+  "))),
   story_maplibre(
     map_id = "map",
     sections = list(
       "home" = home_section(),
       "photos" = photo_section(),
-      "intro" = story_section(
-        "Median Age in Florida",
-        content = list(
-          selectInput(
-            "county",
-            "Select a county",
-            choices = sort(unique(fl_age$county))
-          ),
-          p("Scroll down to view the median age distribution in the selected county.")
-        )
-      ),
-      "county" = story_section(
-        title = NULL,
-        content = list(
-          uiOutput("county_text"),
-          plotOutput("county_plot")
-        )
-      ),
       "sdm" = sdm_section()
     )
   )
 )
 
 server <- function(input, output, session) {
+
+  espece <- eventReactive(input$go, {
+    input$espece
+  })
   
-  sel_county <- reactive({
-    filter(fl_age, county == input$county)
+  observeEvent(input$go, {
+    session$sendCustomMessage(type = 'scrollTo', message = 'photos')
   })
   
   output$map <- renderMaplibre({
     maplibre(
       carto_style("positron"),
-      bounds = fl_age,
+      zoom=4,
+      center=c(-70,53),
       scrollZoom = FALSE
-    ) |>
-      add_fill_layer(
-        id = "fl_tracts",
-        source = fl_age,
-        fill_color = interpolate(
-          column = "estimate",
-          values = c(20, 80),
-          stops = c("lightblue", "darkblue"),
-          na_color = "lightgrey"
-        ),
-        fill_opacity = 0.5
-      ) |>
-      add_legend(
-        "Median age in Florida",
-        values = c(20, 80),
-        colors = c("lightblue", "darkblue"),
-        position = "bottom-right"
-      ) |>
+    ) |> set_projection('globe') |>
       add_raster_source(
         id = "sdm",
         tiles = url
@@ -99,22 +65,12 @@ server <- function(input, output, session) {
       labs(x = "Median Age", y = "")
   })
   
-  on_section("map", "intro", {
-    maplibre_proxy("map") |>
-      set_filter("fl_tracts", NULL) |>
-      fit_bounds(fl_age, animate = TRUE)
-  })
-  
-  on_section("map", "county", {
-    maplibre_proxy("map") |>
-      set_filter("fl_tracts", filter = list("==", "county", input$county)) |>
-      fit_bounds(sel_county(), animate = TRUE)
-  })
-  
   on_section("map", "sdm", {
     render_sdm()
   })
   
+  output$photos <- photo_server(input, espece)
+
 }
 
 shinyApp(ui, server)

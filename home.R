@@ -5,9 +5,9 @@ home_section <- function(){
     content = (fluidPage(
       tags$head(includeCSS("www/home.css")),
       fluidRow(column(width=12, align='center', img(src='images/logo_bq.png', style='max-width:70%;margin:auto'))),
-      fluidRow(column(width=12, align='center', textInput(inputId='espece', label='', placeholder = "Entrer un nom d'espèce"), style='margin:auto')),
+      fluidRow(column(width=12, align='center', textInput(inputId='espece', label='', placeholder = "Entrer un nom d'espèce"),actionButton("go", "Explorer!"), style='margin:auto')),
     )),
-    width= '100vw', 
+    width= '100vw',
     position = 'center'
   )
 }

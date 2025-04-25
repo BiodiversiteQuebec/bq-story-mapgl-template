@@ -26,15 +26,16 @@ render_sdm <- function(){
         id = 'sdm-layer',
         source = 'sdm',
         raster_opacity = 0.5
-      ) |>
-      add_legend(
-        "Probabilité de présence",
-        values = vals,
-        colors = cols,
-        position = "bottom-right",
-        layer_id = "sdm-layer"
-      ) |>
-      fit_bounds(bounds, animate = TRUE)
+      ) 
+    #|>
+    #  add_legend(
+    #    "Probabilité de présence",
+    #    values = vals,
+    #    colors = cols,
+    #    position = "bottom-right",
+    #    layer_id = "sdm-layer"
+    #  ) |>
+    #  fit_bounds(bounds, animate = TRUE)
 }
 
 
