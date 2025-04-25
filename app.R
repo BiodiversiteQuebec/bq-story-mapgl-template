@@ -18,21 +18,14 @@ fl_age <- get_acs(
 
 source('home.R')
 source('sdm_section.R')
+source('photo.R')
 
 ui <- fluidPage(
   story_maplibre(
     map_id = "map",
     sections = list(
       "home" = home_section(),
-      "page2" = story_section(
-        "Page 2",
-        content = (fluidPage(
-          tags$head(includeCSS("www/home.css")),
-          h4("Page 2"))
-        ),
-        width= '100vw', 
-        position = 'center'
-      ),
+      "photos" = photo_section(),
       "intro" = story_section(
         "Median Age in Florida",
         content = list(
@@ -94,6 +87,10 @@ server <- function(input, output, session) {
   output$county_text <- renderUI({
     h2(toupper(input$county))
   })
+  
+  output$espece <- renderText({ input$espece })
+  
+  output$photos <- photo_server(input)
   
   output$county_plot <- renderPlot({
     ggplot(sel_county(), aes(x = estimate)) +
