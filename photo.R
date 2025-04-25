@@ -28,7 +28,7 @@ photo_server <- function(input){
   })
 }
 
-getCC0links<-function(species,license=c("cc0")){  
+getCC0links<-function(species,license=c("cc0", "cc-by", "cc-by-nc")){  
   sp<-gsub(" ","%20",species)
   cc<-paste(license,collapse="0%2C")
   urlsearch<-paste0("https://api.inaturalist.org/v1/taxa?q=",sp,"&order=desc&order_by=observations_count")
