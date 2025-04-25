@@ -1,8 +1,10 @@
 library(shiny)
+library(terra)
 library(mapgl)
 library(tidycensus)
 library(tidyverse)
 library(sf)
+library(viridisLite)
 
 fl_age <- get_acs(
   geography = "tract",
@@ -15,6 +17,7 @@ fl_age <- get_acs(
   st_sf()
 
 source('home.R')
+source('sdm_section.R')
 
 ui <- fluidPage(
   story_maplibre(
@@ -47,7 +50,8 @@ ui <- fluidPage(
           uiOutput("county_text"),
           plotOutput("county_plot")
         )
-      )
+      ),
+      "sdm" = sdm_section()
     )
   )
 )
@@ -80,6 +84,10 @@ server <- function(input, output, session) {
         values = c(20, 80),
         colors = c("lightblue", "darkblue"),
         position = "bottom-right"
+      ) |>
+      add_raster_source(
+        id = "sdm",
+        tiles = url
       )
   })
   
@@ -104,6 +112,10 @@ server <- function(input, output, session) {
     maplibre_proxy("map") |>
       set_filter("fl_tracts", filter = list("==", "county", input$county)) |>
       fit_bounds(sel_county(), animate = TRUE)
+  })
+  
+  on_section("map", "sdm", {
+    render_sdm()
   })
   
 }
