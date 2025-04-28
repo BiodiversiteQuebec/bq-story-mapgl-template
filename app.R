@@ -8,6 +8,7 @@ library(sf)
 library(viridisLite)
 
 source('home.R')
+source('aires_rep_section.R')
 source('sdm_section.R')
 source('photo.R')
 
@@ -22,6 +23,7 @@ ui <- fluidPage(
     sections = list(
       "home" = home_section(),
       "photos" = photo_section(),
+      "aires" = aires_rep_section(),
       "sdm" = sdm_section()
     )
   )
@@ -47,7 +49,8 @@ server <- function(input, output, session) {
       add_raster_source(
         id = "sdm",
         tiles = url
-      )
+      ) |>
+      add_vector_source('aires',url=paste0('pmtiles://',aires_pmtiles))
   })
   
   output$county_text <- renderUI({
@@ -58,17 +61,20 @@ server <- function(input, output, session) {
   
   output$photos <- photo_server(input)
   
-  output$county_plot <- renderPlot({
-    ggplot(sel_county(), aes(x = estimate)) +
-      geom_histogram(fill = "lightblue", color = "black", bins = 10) +
-      theme_minimal() +
-      labs(x = "Median Age", y = "")
-  })
-  
   on_section("map", "sdm", {
     render_sdm()
   })
+
+  on_section("map", "aires", {
+    render_aires({espece()})
+  })
   
+  on_section("map", "photos",{
+    maplibre_proxy("map") |>
+      clear_layer("sdm-layer") |> 
+      clear_layer('aires-layer')
+  })
+
   output$photos <- photo_server(input, espece)
 
 }

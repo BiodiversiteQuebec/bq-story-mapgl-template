@@ -9,7 +9,7 @@ photo_section <- function(sdm){
       tags$head(includeCSS("www/photo.css"),
       tags$script(HTML("
       Shiny.addCustomMessageHandler('scrollTo', function(anchor) {
-        document.getElementsByName(anchor)[0].scrollIntoView({ behavior: 'smooth' });
+        setTimeout(function(){document.getElementsByName(anchor)[0].scrollIntoView({ behavior: 'smooth' });},2000)
       });
     "))),
       fluidRow(
@@ -22,6 +22,10 @@ photo_section <- function(sdm){
 }
 
 photo_server <- function(input, espece){
+  maplibre_proxy("map") |>
+    clear_layer("sdm-layer")
+  maplibre_proxy("map") |> 
+    clear_layer('aires-layer')
   renderUI({
     sp <- espece()
     if(sp !='' & input$go){

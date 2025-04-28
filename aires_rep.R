@@ -1,46 +1,16 @@
 # Fonction pour choisir un ficher d'aires de repartition parmi ceux du gouvernement
-selected_community <- function(input)
+aires <- function(input)
 {
-  if (input$Community == "Amphibiens")
-  {
-    return(st_read("data/Aires_repartition_amphibiens.sqlite"))
-  }
-  else if (input$Community == "Mammifères")
-  {
-    return(st_read("data/Aires_repartition_MT.sqlite"))
-  }
-  else if (input$Community == "Poissons")
-  {
-    return(st_read("data/Aires_repartition_poisson_eau_douce.sqlite"))
-  }
-  else
-  {
-    return(st_read("data/Aires_repartition_reptiles.sqlite"))
-  }
-}
-
-# Fonction pour obtenir la liste des especes dans un fichier
-# Note: Pour le moment le nom pour les fichiers .sqlite sont utilises
-get_species_choices <- function(community)
-{
-  sort(unique(community$nom_franca))
-}
-
-# Fonction pour obtenir l'aire de repartition de l'espece choisie
-# Note: Ici encore, le nom pour les fichiers .sqlite est utilise
-sel_species <- function(input, selected_community)
-{
-  community_data <- selected_community(input)
-  filter(community_data, nom_franca == input$Espèces)
+    return(st_read("data/Aires_repartition.gpkg"))
 }
 
 
 # Fonction pour produire la carte de l'aire de repartition de l'espece
-render_species_map <- function(community_data, species_data)
+render_aires <- function(species_data)
 {
   maplibre(
     carto_style("positron"),
-    bounds = community_data,
+    bounds = species_data,
     scrollZoom = FALSE
   ) |>
     add_fill_layer(

@@ -21,7 +21,7 @@ render_sdm <- function(){
       st_bbox() |>
       as.numeric()
     maplibre_proxy("map") |>
-      #clear_layer("fl_tracts") |>  
+      clear_layer("aires-layer") |>  
       add_raster_layer(
         id = 'sdm-layer',
         source = 'sdm',
