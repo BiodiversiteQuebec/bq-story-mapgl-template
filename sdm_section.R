@@ -25,7 +25,7 @@ render_sdm <- function(){
       add_raster_layer(
         id = 'sdm-layer',
         source = 'sdm',
-        raster_opacity = 0.5
+        raster_opacity = 0.75
       ) 
     #|>
     #  add_legend(

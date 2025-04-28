@@ -63,7 +63,9 @@ server <- function(input, output, session) {
   output$photos <- photo_server(input)
   
   on_section("map", "home", {
-    maplibre_proxy("map") |> fly_to(center=c(-70,53),zoom=2)
+    maplibre_proxy("map") |> fly_to(center=c(-70,53),zoom=2) |>
+      clear_layer("sdm-layer") |> 
+      clear_layer('aires-layer')
   })
   
   on_section("map", "sdm", {
