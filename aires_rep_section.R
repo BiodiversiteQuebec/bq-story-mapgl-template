@@ -1,6 +1,6 @@
 # Fonction pour choisir un ficher d'aires de repartition parmi ceux du gouvernement
 
-aires <- st_read("data/aires_repartition.gpkg")
+#aires <- st_read("data/aires_repartition.gpkg")
 aires_pmtiles <- 'https://object-arbutus.cloud.computecanada.ca/bq-io/geoio/aires_repartition.pmtiles'
 
 
@@ -8,6 +8,7 @@ aires_rep_section <- function(){
   story_section(
     "Répartition de l'espèce au Québec",
     content = (fluidPage(
+      a(name='aires'),
       tags$head(includeCSS("www/home.css")),
       h4("Aires de répartition validée par des experts (MELCCFP)"))
     ),
@@ -21,7 +22,7 @@ aires_rep_section <- function(){
 render_aires <- function(espece){
     maplibre_proxy("map") |>
       clear_layer("sdm-layer") |>  
-      fit_bounds(data) |>
+      fly_to(center=c(-70,53),zoom=4) |>
       add_fill_layer(
         id = "aires-layer",
         source = 'aires',

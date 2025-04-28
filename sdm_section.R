@@ -41,7 +41,7 @@ render_sdm <- function(){
 
 sdm_section <- function(){
   story_section(
-    "Répartition de l'espèce au Québec",
+    paste0("Modélisation de la distribution de l'espèce au Québec"),
     content = (fluidPage(
       tags$head(includeCSS("www/home.css")),
       h4("Modèle de distribution illustrant la probabilité de présence"))

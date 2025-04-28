@@ -22,7 +22,7 @@ photo_section <- function(sdm){
 }
 
 photo_server <- function(input, espece){
-  maplibre_proxy("map") |>
+  maplibre_proxy("map") |> fly_to(center=c(-70,53),zoom=2) |>
     clear_layer("sdm-layer")
   maplibre_proxy("map") |> 
     clear_layer('aires-layer')

@@ -1,0 +1,7 @@
+services:
+  shiny:
+    build: .
+    volumes:
+      - ./:/home/shiny-app/
+    ports:
+      - "7077:8088"
