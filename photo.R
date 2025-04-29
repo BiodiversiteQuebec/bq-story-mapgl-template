@@ -6,16 +6,11 @@ photo_section <- function(sdm){
   story_section(
     "",
     content = (fluidPage(
-      tags$head(includeCSS("www/photo.css"),
-      tags$script(HTML("
-      Shiny.addCustomMessageHandler('scrollTo', function(anchor) {
-        setTimeout(function(){document.getElementsByName(anchor)[0].scrollIntoView({ behavior: 'smooth' });},2000)
-      });
-    "))),
+      tags$head(includeCSS("www/photo.css")),
       fluidRow(
         a(name='photos'),
         uiOutput("photos")
-      )    )),
+      ))),
     width= '100vw', 
     position = 'center'
   )

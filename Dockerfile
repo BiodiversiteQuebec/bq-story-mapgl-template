@@ -12,4 +12,4 @@ RUN R -e "install.packages(c('pak')); \
 COPY app.R /home/shiny-app/app.R
 
 # Run the R Shiny app
-CMD Rscript /home/shiny-app/app.R
+CMD ["R", "-e", "library(shiny); setwd('/home/shiny-app/'); addResourcePath('www', '/home/shiny-app/www'); source('app.R')"]

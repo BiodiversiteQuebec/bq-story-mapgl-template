@@ -8,7 +8,6 @@ aires_rep_section <- function(){
   story_section(
     "Répartition de l'espèce au Québec",
     content = (fluidPage(
-      a(name='aires'),
       tags$head(includeCSS("www/home.css")),
       h4("Aires de répartition validée par des experts (MELCCFP)"))
     ),

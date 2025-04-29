@@ -7,7 +7,6 @@ library(sf)
 library(viridisLite)
 options(shiny.port = 8088)
 
-#setwd('/home/shiny-app/')
 source('home.R')
 source('aires_rep_section.R')
 source('sdm_section.R')
@@ -16,7 +15,7 @@ source('photo.R')
 ui <- fluidPage(
   tags$head(tags$script(HTML("
       Shiny.addCustomMessageHandler('scrollTo', function(anchor) {
-        document.getElementsByName(anchor)[0].scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(anchor).scrollIntoView({ behavior: 'smooth', block: 'start'  });
       });
   "))),
   story_maplibre(
@@ -37,7 +36,7 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$go, {
-    session$sendCustomMessage(type = 'scrollTo', message = 'aires')
+    session$sendCustomMessage(type = 'scrollTo', message = 'section-aires')
   })
   
   output$map <- renderMaplibre({
@@ -84,4 +83,5 @@ server <- function(input, output, session) {
   output$photos <- photo_server(input, espece)
 }
 
-shinyApp(ui, server)
+app <- shinyApp(ui, server)
+runApp(app, host ="0.0.0.0", port = 8088, launch.browser = FALSE)
